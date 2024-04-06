@@ -24,7 +24,7 @@ This is an example of exponentially ascending data on the interval `[600, 800]`
 If you're interested in the actual derivation, see the [whitepaper](whitepaper.pdf) in this repo.
 
 ## Installation
-TODO:
+Install with `pip3 install invexpo` or download from the [releases](https://github.com/Kiyoshika/inverse-exponential/releases) and install locally.
 
 ## Usage
 Initialize an "empty" distribution:
