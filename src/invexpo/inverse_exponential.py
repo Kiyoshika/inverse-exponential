@@ -88,7 +88,13 @@ class InverseExponential:
         samples: list[float] = []
         for i in range(size):
             _u: float = _uniform_dist.rvs()
-            samples.append(self.ppf(_u))
+            _sample = self.ppf(_u)
+            if _sample < self.__lower_bound:
+                samples.append(self.__lower_bound)
+            elif _sample > self.__upper_bound:
+                samples.append(self.__upper_bound)
+            else:
+                samples.append(_sample)
 
         return samples
 
