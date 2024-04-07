@@ -70,7 +70,8 @@ class InverseExponential:
         if x >= self.__upper_bound:
             return 1.0
 
-        return integrate.quad(self.pdf, self.__lower_bound, x)[0]
+        # analytical form of the CDF
+        return (np.exp(self.__param_a*(x - self.__lower_bound)) - 1)/(np.exp(self.__param_a*(self.__range)) - 1)
 
     def ppf(self, p: float) -> float:
         if not self.__fitted:
@@ -79,7 +80,8 @@ class InverseExponential:
         if p < 0.0 or p > 1.0:
             raise ArgumentError("p must be 0.0 <= p <= 1.0")
 
-        return self.__find_ppf(p)
+        # analytic form of the inverse CDF
+        return (np.log(p*(np.exp(self.__param_a*(self.__range))-1)+1)/self.__param_a) + self.__lower_bound
 
     def icdf(self, p: float) -> float:
         return self.ppf(p)
@@ -162,15 +164,6 @@ class InverseExponential:
         if not result.converged:
             raise Exception("Optimizer could not converge. Try increasing maxiter?")
         self.__param_a = result.root
-
-    def __find_ppf(self, p: float) -> float:
-        # start the initial guess in the middle of the range
-        x0: float = (self.__lower_bound + self.__upper_bound) / 2.0
-        result = minimize(lambda x: (self.cdf(x) - p)**2, x0 = [x0])
-        if not result.success:
-            raise Exception("ppf optimizer was not successful in finding an appropriate value.")
-
-        return result.x[0]
 
     def __compute_moment(self, n: int) -> float:
         return integrate.quad(lambda x: pow(x, n) * self.pdf(x), self.__lower_bound, self.__upper_bound)[0]

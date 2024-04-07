@@ -11,8 +11,6 @@ This module uses [scipy](https://github.com/scipy/scipy/blob/main/LICENSE.txt) f
 ## Warnings
 * When fitting your data, the lower and upper bounds are determined by the min/max of the data; this will severely impact the results if you have very low/high extremes. It's recommended to treat your data and ensure the sample you're fitting is a "natural"-looking exponentially ascending shape.
 
-* Drawing samples (with `rvs()`) is very slow when exceeding ~1000 samples. It's currently using optimization and numerical integration to evaluate the inverse CDF each time you want to draw a sample. In the future this may be improved if required.
-
 ## Example Data
 This is an example of exponentially ascending data on the interval `[600, 800]`
 
@@ -46,6 +44,11 @@ invex = InverseExponential()
 # fit to data
 invex.fit(data)
 
+# there is also a maxiter parameter if the optimizer fails to converge
+# for some reason, but usually there might be a more serious problem
+# if that's happening...
+invex.fit(data, maxiter=12345)
+
 # create theoretical distribution
 # NOTE: the 'a' (shape) parameter is usually very small, large numbers can cause overflows.
 # Larger values of 'a' will create sharper peaks. Smaller values will more smoothly
@@ -70,7 +73,6 @@ After fitting/creating a distribution you can use the following methods:
   * Integrates the pdf over the interval `[lower_bound, upper_bound]`
 * `rvs(size: int = 1) -> list[float]`
   * Generate `size` random variables from the distribution
-  * WARNING: this is unoptimized and slows down heavily after ~1000 samples
 * `moment(n: int) -> float`
   * Obtain the `n`-th moment of the distribution
 * `mean() -> float`
