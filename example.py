@@ -5,6 +5,7 @@ data = [600, 625, 650, 675, 700, 710, 720, 730, 740, 750, 760, 770, 780, 790, 80
 
 invex = InverseExponential()
 invex.fit(data)
+invex.create(a = 0.01, lower_bound = 300, upper_bound = 900)
 
 print("Shape parameter:\t\t", invex.get_parameter())
 print("Integral from [600, 700]:\t", invex.integrate(600, 700))

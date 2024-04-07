@@ -3,7 +3,7 @@
 *.swp
 
 # mac
-.DS_Store/
+.DS_Store
 
 # pip
 dist/
