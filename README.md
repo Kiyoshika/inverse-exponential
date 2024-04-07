@@ -12,11 +12,9 @@ This module uses [scipy](https://github.com/scipy/scipy/blob/main/LICENSE.txt) f
 * When fitting your data, the lower and upper bounds are determined by the min/max of the data; this will severely impact the results if you have very low/high extremes. It's recommended to treat your data and ensure the sample you're fitting is a "natural"-looking exponentially ascending shape.
 
 ## Example Data
-This is an example of exponentially ascending data on the interval `[600, 800]`
+This is an example of exponentially ascending data on the interval `[300, 900]`
 
-* NOTE: this distribution can capture various shapes whether it's a slow rise or sharper rise. This example used a fairly linear rise as a demonstration.
-
-<img width="580" alt="image" src="https://github.com/Kiyoshika/inverse-exponential/assets/49159969/e3b89740-747c-4ccb-8b63-b3c21313da18">
+<img width="570" alt="Screenshot 2024-04-07 at 3 19 16 PM" src="https://github.com/Kiyoshika/inverse-exponential/assets/49159969/c1e54c66-3936-42f4-9eb8-1e647d0b8d54">
 
 ## Mathematical Details
 If you're interested in the actual derivation, see the [whitepaper](whitepapers/) directory in this repo (will list all revisions of the paper as a separate PDF.)
