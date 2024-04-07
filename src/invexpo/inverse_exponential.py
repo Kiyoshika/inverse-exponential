@@ -87,14 +87,14 @@ class InverseExponential:
 
         samples: list[float] = []
         for i in range(size):
-            _u: float = _uniform_dist.rvs()
-            _sample = self.ppf(_u)
-            if _sample < self.__lower_bound:
-                samples.append(self.__lower_bound)
-            elif _sample > self.__upper_bound:
-                samples.append(self.__upper_bound)
-            else:
-                samples.append(_sample)
+            # sometimes the icdf is slightly inaccurate and generates values outside the bounds
+            # so we repeatedly sample until we obtain valid values
+            while True:
+                _u: float = _uniform_dist.rvs()
+                _sample = self.ppf(_u)
+                if _sample >= self.__lower_bound and _sample <= self.__upper_bound:
+                    samples.append(_sample)
+                    break
 
         return samples
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "invexpo"
-version = "0.1"
+version = "0.1.1"
 authors = [
     { name="Zachary Weaver", email="zacharylweaver00@gmail.com" }
 ]
