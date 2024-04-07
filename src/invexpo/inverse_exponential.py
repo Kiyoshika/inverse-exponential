@@ -25,19 +25,7 @@ class InverseExponential:
         self.__find_root_of_likelihood(maxiter)
         self.__fitted = True
 
-        # stores the first 3 moments
-        self.__moments: list[float] = [
-            self.__compute_moment(1),
-            self.__compute_moment(2),
-            self.__compute_moment(3)
-        ]
-        self.__mean: float = self.__moments[0]
-        self.__median: float = self.icdf(0.5)
-        self.__variance: float = self.__moments[1] - self.__moments[0]**2
-        self.__stdev: float = np.sqrt(self.__variance)
-
-    def get_parameter(self) -> float:
-        return self.__param_a
+        self.__precompute_common_statistics()
 
     # create a theoretical distribution
     def create(self, a: float, lower_bound: float, upper_bound) -> None:
@@ -49,6 +37,11 @@ class InverseExponential:
         self.__upper_bound = upper_bound
         self.__range = upper_bound - lower_bound
         self.__fitted = True
+
+        self.__precompute_common_statistics()
+
+    def get_parameter(self) -> float:
+        return self.__param_a
 
     def pdf(self, x: float) -> float:
         if not self.__fitted:
@@ -167,3 +160,14 @@ class InverseExponential:
 
     def __compute_moment(self, n: int) -> float:
         return integrate.quad(lambda x: pow(x, n) * self.pdf(x), self.__lower_bound, self.__upper_bound)[0]
+
+    def __precompute_common_statistics(self) -> None:
+        self.__moments: list[float] = [
+            self.__compute_moment(1),
+            self.__compute_moment(2),
+            self.__compute_moment(3)
+        ]
+        self.__mean: float = self.__moments[0]
+        self.__median: float = self.icdf(0.5)
+        self.__variance: float = self.__moments[1] - self.__moments[0]**2
+        self.__stdev: float = np.sqrt(self.__variance)
