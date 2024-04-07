@@ -25,6 +25,17 @@ class InverseExponential:
         self.__find_root_of_likelihood(maxiter)
         self.__fitted = True
 
+        # stores the first 3 moments
+        self.__moments: list[float] = [
+            self.__compute_moment(1),
+            self.__compute_moment(2),
+            self.__compute_moment(3)
+        ]
+        self.__mean: float = self.__moments[0]
+        self.__median: float = self.icdf(0.5)
+        self.__variance: float = self.__moments[1] - self.__moments[0]**2
+        self.__stdev: float = np.sqrt(self.__variance)
+
     def get_parameter(self) -> float:
         return self.__param_a
 
@@ -102,22 +113,35 @@ class InverseExponential:
         if not self.__fitted:
             raise NotFittedError("moment")
 
-        return integrate.quad(lambda x: pow(x, n) * self.pdf(x), self.__lower_bound, self.__upper_bound)[0]
+        # pre-computed moments
+        if n >= 1 and n <= 3:
+            return self.__moments[n - 1]
+        
+        return self.__compute_moment(n)
 
     def median(self) -> float:
         if not self.__fitted:
             raise NotFittedError("median")
 
-        return self.icdf(0.5)
+        return self.__median
 
     def mean(self) -> float:
-        return self.moment(1)
+        if not self.__fitted:
+            raise NotFittedError("mean")
+
+        return self.__mean
 
     def var(self) -> float:
-        return self.moment(2) - self.moment(1)**2
+        if not self.__fitted:
+            raise NotFittedError("var")
+
+        return self.__variance
 
     def std(self) -> float:
-        return np.sqrt(self.var())
+        if not self.__fitted:
+            raise NotFittedError("std")
+
+        return self.__stdev
 
     def sf(self, x: float) -> float:
         raise NotImplementedError()
@@ -147,3 +171,6 @@ class InverseExponential:
             raise Exception("ppf optimizer was not successful in finding an appropriate value.")
 
         return result.x[0]
+
+    def __compute_moment(self, n: int) -> float:
+        return integrate.quad(lambda x: pow(x, n) * self.pdf(x), self.__lower_bound, self.__upper_bound)[0]
